@@ -1,0 +1,15 @@
+{
+  "name": "apu",
+  "version": "0.0.0",
+  "description": "NES APU Emulator",
+  "keywords": [
+    "NES",
+    "APU",
+    "Audio"
+  ],
+  "author": "Christopher Haster <chaster@utexas.edu>",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "mbed-drivers": "~0.11.8"
+  }
+}
