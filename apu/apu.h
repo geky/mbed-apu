@@ -13,7 +13,7 @@ namespace apu {
 
 // APU Settings
 #define APU_FREQ 894886
-#define APU_SCALE 8
+#define APU_SCALE 16
 
 
 // Base channel representation
