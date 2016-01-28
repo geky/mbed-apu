@@ -90,11 +90,11 @@ private:
     Ticker _ticker;
     AnalogOut _dac;
 
-    void update();
+    void tick();
 
 public:
     // APU lifetime
-    APU(Channel **channels, unsigned count, PinName pin = DAC0_OUT);
+    APU(Channel **channels, unsigned count, PinName pin=DAC0_OUT);
 
     // Starting/stopping the unit
     void start();

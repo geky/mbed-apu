@@ -10,12 +10,11 @@ using namespace apu;
 // APU lifetime
 APU::APU(Channel **channels, unsigned count, PinName pin)
         : _channels(channels), _count(count), _dac(pin) {
-    
 }
 
 
 // APU Emulation
-void APU::update() {
+void APU::tick() {
     unsigned output = 0;
 
     for (unsigned i = 0; i < _count; i++) {
@@ -29,9 +28,8 @@ void APU::update() {
 }
 
 void APU::start() {
-    // TODO
     timestamp_t delay = 1000000 / (APU_FREQ/APU_SCALE);
-    _ticker.attach_us(this, &APU::update, delay);
+    _ticker.attach_us(this, &APU::tick, delay);
 }
 
 void APU::stop() {
