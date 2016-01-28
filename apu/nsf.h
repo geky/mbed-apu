@@ -20,26 +20,47 @@ namespace apu {
 class NSF {
 private:
     // NSF Channel representation
-    class Channel {
-    private:
+    struct Channel {
         uint8_t *_cmds;
-        unsigned _tick;
+
+        bool _enabled;
+        uint8_t _note;
+        uint8_t _volume;
+        int8_t _offset;
 
         uint8_t _delay;
         uint8_t _pdelay;
         uint8_t _cut;
 
+        uint8_t _sweep;
+        uint8_t _sweep_div;
+
+        uint8_t _arpeggio;
+        uint8_t _arp_count;
+
+        uint8_t _port;
+        uint8_t _slide;
+        uint16_t _slide_target;
+
         struct {
             uint8_t *data;
             uint8_t count;
+            uint8_t tick;
+            uint8_t repeat;
         } _seq[NSF_SEQUENCES];
 
         apu::Channel *_channel;
         NSF *_nsf; 
 
-    public:
         // Channel lifetime
-        Channel(NSF *nsf, apu::Channel *channel);
+        Channel(apu::Channel *channel);
+
+        // Reset channel
+        void reset();
+
+        // Enable/disable channel
+        void enable();
+        void disable();
 
         // Loads channel setup
         void frame(uint8_t *frame);
@@ -79,7 +100,7 @@ private:
     // Channels and things
     Channel _channels[NSF_CHANNELS];
 
-    minar::callback_handle_t _handle;
+    minar::callback_handle_t _handle = 0;
 
     inline uint8_t *lookup(uint8_t *addr, unsigned off);
 
@@ -95,6 +116,9 @@ public:
     // Starting/stopping the player
     void start();
     void stop();
+
+    // Get the current 6-bit amplitude of the APU
+    uint8_t output();
 };
 
 

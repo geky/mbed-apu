@@ -12,33 +12,40 @@ namespace apu {
 
 
 // APU Settings
-#define APU_FREQ 894886
-#define APU_SCALE 16
+#define APU_FREQ 1789772
+#define APU_MAX 64
+
+class APU; // predeclared
 
 
 // Base channel representation
 class Channel {
 protected:
-    int _timer;
-    int _tick;
+    friend APU;
+
+    unsigned _tick;
+    uint16_t _output;
 
     uint16_t _period;
+    bool _update;
+
     uint8_t _duty;
     uint8_t _volume;
+    int16_t _pitch;
+
+    Ticker _ticker;
+    APU *_apu;
+
+    void retick(unsigned);
 
 public:
     // Channel lifetime
     Channel();
     virtual ~Channel() = default;
 
-    // Emulate a channel
-    virtual void update(int cycles);
-
     // Trigger a channel update
-    virtual void tick() = 0;
-
-    // Get the current amplitude of the channel
-    virtual uint8_t output() = 0;
+    virtual void tick();
+    virtual void update() = 0;
 
     // Enable/disable specified channel
     virtual void enable();
@@ -48,35 +55,52 @@ public:
     // Note value starts at A0
     virtual void note(uint8_t note);
 
+    // Find the mapping of a period to a note
+    virtual uint16_t to_period(uint8_t note) = 0;
+
+    // Sets the period being played by the channel directly
+    // Period is based on NES clock cycles
+    virtual void set_period(uint16_t period);
+
+    // Adjust period without timer reset
+    virtual void adjust_period(uint16_t period);
+
+    // Get the current period
+    virtual uint16_t get_period();
+
     // Set the volume of a channel
     virtual void volume(uint8_t volume);
 
+    // Set the pitch offset of a channel
+    virtual void pitch(int16_t offset);
+
     // Set the duty cycle of a channel
     virtual void duty(uint8_t duty);
+
+    // Get the current amplitude of the channel
+    virtual uint8_t output();
 };
 
 // NES Channels
 class Square : public Channel {
 public:
-    virtual void tick();
-    virtual uint8_t output();
+    virtual uint16_t to_period(uint8_t);
+    virtual void update();
 };
 
 class Triangle : public Channel {
 public:
-    virtual void update(int);
-    virtual void tick();
-    virtual uint8_t output();
+    virtual uint16_t to_period(uint8_t);
+    virtual void update();
 };
 
 class Noise : public Channel {
 private:
-    uint16_t _shift;
+    uint16_t _shift = 0x0001;
 
 public:
-    virtual void note(uint8_t);
-    virtual void tick();
-    virtual uint8_t output();
+    virtual uint16_t to_period(uint8_t);
+    virtual void update();
 };
 
 
@@ -87,18 +111,11 @@ private:
     unsigned _count;
     uint8_t _output;
 
-    Ticker _ticker;
     AnalogOut _dac;
-
-    void tick();
 
 public:
     // APU lifetime
     APU(Channel **channels, unsigned count, PinName pin=DAC0_OUT);
-
-    // Starting/stopping the unit
-    void start();
-    void stop();
 
     // Enable/disable specified channel
     void enable(unsigned channel);
@@ -108,13 +125,23 @@ public:
     // Note value starts at A0
     void note(unsigned channel, uint8_t note);
 
+    // Sets the period being played by the channel directly
+    // Period is based on NES clock cycles
+    void period(unsigned channel, uint16_t period);
+
     // Set the volume of a channel
     void volume(unsigned channel, uint8_t volume);
+
+    // Set the pitch offset of a channel
+    void pitch(unsigned channel, int16_t offset);
 
     // Set the duty cycle of a channel
     void duty(unsigned channel, uint8_t duty);
 
-    // Get the current 6-bit amplitude of the APU
+    // Updates the output
+    void update();
+
+    // Get the current amplitude of the APU
     uint8_t output();
 };
 
