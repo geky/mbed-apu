@@ -6,7 +6,8 @@
 #define APU_H
 
 #include <stdint.h>
-#include "mbed-drivers/mbed.h"
+#include "mbed-drivers/Ticker.h"
+#include "mbed-drivers/AnalogOut.h"
 
 namespace apu {
 
@@ -33,7 +34,7 @@ protected:
     uint8_t _volume;
     int16_t _pitch;
 
-    Ticker _ticker;
+    mbed::Ticker _ticker;
     APU *_apu;
 
     void retick(unsigned);
@@ -111,7 +112,7 @@ private:
     unsigned _count;
     uint8_t _output;
 
-    AnalogOut _dac;
+    mbed::AnalogOut _dac;
 
 public:
     // APU lifetime

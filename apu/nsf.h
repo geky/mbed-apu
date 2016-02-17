@@ -6,6 +6,7 @@
 #define NSF_H
 
 #include "apu/apu.h"
+#include "mbed-drivers/Ticker.h"
 
 namespace apu {
 
@@ -100,7 +101,7 @@ private:
     // Channels and things
     Channel _channels[NSF_CHANNELS];
 
-    minar::callback_handle_t _handle = 0;
+    mbed::Ticker _ticker;
 
     inline uint8_t *lookup(uint8_t *addr, unsigned off);
 

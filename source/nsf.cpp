@@ -438,16 +438,11 @@ void NSF::tick() {
 
 // Starting/stopping the player
 void NSF::start() {
-    if (_handle) stop();
-
-    _handle = minar::Scheduler::postCallback(this, &NSF::tick)
-            .period(minar::milliseconds(1000/NSF_FREQ))
-            .getHandle();
+    _ticker.attach_us(this, &NSF::tick, 1000000/NSF_FREQ);
 }
 
 void NSF::stop() {
-    minar::Scheduler::cancelCallback(_handle);
-    _handle = 0;
+    _ticker.detach();
 
     for (unsigned i = 0; i < NSF_CHANNELS; i++) {
         _channels[i].disable();
