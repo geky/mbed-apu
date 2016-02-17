@@ -57,7 +57,6 @@ Channel::Channel() {
 
 // Emulate a channel
 void Channel::retick(unsigned us) {
-    if (us < APU_MAX) us = APU_MAX;
     _ticker.attach_us(this, &Channel::tick, us*1000000 / APU_FREQ);
 }
 
@@ -92,20 +91,23 @@ void Channel::note(uint8_t note) {
 // Sets the period being played by the channel directly
 // Period is based on NES clock cycles
 void Channel::set_period(uint16_t period) {
-    if (period > 0xfff) period = 0xfff;
-    if (period < 8) period = 8;
-
     _period = period;
-    retick(_period + _pitch);
+
+    if (period > 0xfff || period <= 8) {
+        disable();
+    } else {
+        retick(_period + _pitch);
+    }
 }
 
 // Adjust period without timer reset
 void Channel::adjust_period(uint16_t period) {
-    if (period > 0xfff) period = 0xfff;
-    if (period < 8) period = 8;
-
     _period = period;
     _update = true;
+
+    if (period > 0xfff || period <= 8) {
+        disable();
+    }
 }
 
 // Get the current period

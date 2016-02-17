@@ -14,7 +14,6 @@ namespace apu {
 
 // APU Settings
 #define APU_FREQ 1789772
-#define APU_MAX 64
 
 class APU; // predeclared
 
