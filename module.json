@@ -1,7 +1,7 @@
 {
   "name": "apu",
-  "version": "0.0.0",
   "description": "NES APU Emulator",
+  "version": "1.0.0",
   "keywords": [
     "NES",
     "APU",
@@ -9,6 +9,10 @@
   ],
   "author": "Christopher Haster <chaster@utexas.edu>",
   "license": "Apache-2.0",
+  "repository": {
+    "url": "git@github.com:geky/mbed-apu.git",
+    "type": "git"
+  },
   "dependencies": {
     "mbed-drivers": "~0.11.8"
   }

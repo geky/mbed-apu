@@ -29,7 +29,7 @@ inline uint8_t *NSF::lookup(uint8_t *addr, unsigned off) {
 
 // Channel lifetime
 NSF::Channel::Channel(apu::Channel *channel)
-    : _channel(channel) {
+  : _channel(channel) {
     reset();
 }
 
@@ -360,17 +360,17 @@ void NSF::Channel::tick() {
 
 // NSF lifetime
 NSF::NSF(PinName pin)
-        : _apu{
-            Square(), Square(), Triangle(), Noise(), 
-            {&_apu.square1, &_apu.square2, &_apu.triangle, &_apu.noise},
-            APU(_apu.channels, NSF_CHANNELS, pin)
-          },
-          _channels{
-            Channel(&_apu.square1),
-            Channel(&_apu.square2),
-            Channel(&_apu.triangle),
-            Channel(&_apu.noise),
-          } {
+  : _apu{
+        Square(), Square(), Triangle(), Noise(), 
+        {&_apu.square1, &_apu.square2, &_apu.triangle, &_apu.noise},
+        APU(_apu.channels, NSF_CHANNELS, pin)
+    }
+  , _channels{
+        Channel(&_apu.square1),
+        Channel(&_apu.square2),
+        Channel(&_apu.triangle),
+        Channel(&_apu.noise),
+    } {
 
     for (unsigned i = 0; i < NSF_CHANNELS; i++) {
         _channels[i]._nsf = this;

@@ -48,10 +48,10 @@ const static unsigned short NTABLE[] = {
 // General channel implementation
 
 // Channel lifetime
-Channel::Channel() {
-    _period = 0xfff;
-    _volume = 15;
-    _output = 0;
+Channel::Channel()
+  : _output(0)
+  , _period(0xfff)
+  , _volume(15) {
 }
 
 
@@ -149,7 +149,7 @@ void Square::update() {
 }
 
 
-// Triangel channel
+// Triangle channel
 uint16_t Triangle::to_period(uint8_t note) {
     return PTABLE[note - 9];
 }

@@ -9,7 +9,9 @@ using namespace apu;
 
 // APU lifetime
 APU::APU(Channel **channels, unsigned count, PinName pin)
-        : _channels(channels), _count(count), _dac(pin) {
+  : _channels(channels)
+  , _count(count)
+  , _dac(pin) {
     for (unsigned i = 0; i < _count; i++) {
         _channels[i]->_apu = this;
     }
@@ -27,10 +29,6 @@ void APU::update() {
     if (output > 0x3f) output = 0x3f;
     _output = output;
     _dac.write_u16(output << 10);
-}
-
-uint8_t APU::output() {
-    return _output;
 }
 
 
